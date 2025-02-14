@@ -8,11 +8,11 @@
 
 </div>
 
-> [Veja o site aqui.](/)
-
 ## 📄 Descrição do Projeto
 
 Este aplicativo permite aos usuários inserir um valor em uma determinada moeda e selecionar a moeda para a qual desejam converter. Ao clicar em um botão, o aplicativo fará uma requisição para a API, buscará a taxa de câmbio correspondente e exibirá o valor convertido na tela.
+
+> [Veja o site rodando aqui.](https://currency-converter-ten-puce.vercel.app/)
 
 ## ⚙️ Como rodar
 
@@ -23,6 +23,10 @@ npm install
 ```
 
 2. Execute o projeto e entre na porta [http://localhost:3000/](http://localhost:3000/)
+
+``` node
+npm start
+```
 
 ## 🎯 Funcionalidades
 
