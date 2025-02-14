@@ -4,7 +4,6 @@ import loadCodes from "../functions/loadCodes"
 import ExchangeratesAPI from "../api/ExchangeratesAPI"
 import ConvertResponse from "../types/ConvertResponse"
 import ErrorMessage from "../types/ErrorMessage"
-import swap from "../assets/swap.svg"
 
 function Home() {
     const [codes, setCodes] = useState<string[][]>([])
