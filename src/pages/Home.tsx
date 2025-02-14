@@ -5,14 +5,16 @@ import ExchangeratesAPI from "../api/ExchangeratesAPI"
 import ConvertResponse from "../types/ConvertResponse"
 import ErrorMessage from "../types/ErrorMessage"
 import ThemeContext from "../context/Theme.context"
-import numberInputMask from "../functions/inputMark/numberInputMask"
+import numberInputMask from "../functions/inputMask/numberInputMask"
+import SearchableSelect from "../components/SearchableSelect"
+import OptionType from "../types/interfaces/Option.interface"
 
 function Home() {
     const { theme, toggleTheme } = useContext(ThemeContext)
 
-    const [codes, setCodes] = useState<string[][]>([])
-    const [fromConvertType, setFromConvertType] = useState<string>("BRL")
-    const [toConvertType, setToConvertType] = useState<string>("USD")
+    const [option, setOption] = useState<{value: string, label: string}[]>([])
+    const [fromConvertType, setFromConvertType] = useState<OptionType>()
+    const [toConvertType, setToConvertType] = useState<OptionType>()
     const [amount, setAmount] = useState<string>("")
     const [convertedAmount, setConvertedAmount] = useState<string>("")
 
@@ -26,7 +28,13 @@ function Home() {
             alert("Invalid amount")
             return
         }
-        const data: ConvertResponse | ErrorMessage = await ExchangeratesAPI.convertEndpoint(fromConvertType, toConvertType, amountNumber)
+
+        if (!fromConvertType || !toConvertType) {
+            alert("Both currencies are required")
+            return
+        }
+
+        const data: ConvertResponse | ErrorMessage = await ExchangeratesAPI.convertEndpoint(fromConvertType.value, toConvertType.value, amountNumber)
         if ("error" in data) {
             alert(data.error)
             return
@@ -45,10 +53,8 @@ function Home() {
     }
 
     useEffect(() => {
-        loadCodes(setCodes)
+        loadCodes(setOption)
     }, [])
-
-    function teste() { console.log(theme) }
 
     return (
         <>
@@ -64,13 +70,12 @@ function Home() {
                             onChange={e => setAmount(numberInputMask(e))}
                             placeholder="Amount"
                         />
-                        <select
-                            onChange={e => setFromConvertType(e.target.value)}
-                            value={fromConvertType}
+                        <SearchableSelect 
+                            options={option}
+                            onChange={(value: any) => setFromConvertType(value)}
+                            placeholder={"Select currency"}
                             className={css.select}
-                        >
-                            {codes.map((code, index) => <option key={index} value={code[0]}>{code[0]} - {code[1]}</option>)}
-                        </select>
+                        />
                     </div>
                 </div>
                 <div className={css.buttons}>
@@ -87,13 +92,12 @@ function Home() {
                             className={css.readonly}
                             placeholder="Converted amount"
                         />
-                        <select
-                            onChange={e => setToConvertType(e.target.value)}
-                            value={toConvertType}
+                        <SearchableSelect 
+                            options={option}
+                            onChange={(value: any) => setToConvertType(value)}
+                            placeholder={"Select currency"}
                             className={css.select}
-                        >
-                            {codes.map((code, index) => <option key={index} value={code[0]}>{code[0]} - {code[1]}</option>)}
-                        </select>
+                        />
                     </div>
                 </div>
             </main>
