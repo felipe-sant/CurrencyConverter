@@ -1,24 +1,37 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import css from "../styles/pages/home.module.css"
 import loadCodes from "../functions/loadCodes"
 import ExchangeratesAPI from "../api/ExchangeratesAPI"
 import ConvertResponse from "../types/ConvertResponse"
 import ErrorMessage from "../types/ErrorMessage"
+import ThemeContext from "../context/Theme.context"
+import numberInputMask from "../functions/inputMark/numberInputMask"
 
 function Home() {
+    const { theme, toggleTheme } = useContext(ThemeContext)
+
     const [codes, setCodes] = useState<string[][]>([])
     const [fromConvertType, setFromConvertType] = useState<string>("BRL")
     const [toConvertType, setToConvertType] = useState<string>("USD")
-    const [amount, setAmount] = useState<number>(0)
-    const [convertedAmount, setConvertedAmount] = useState<number>(0)
+    const [amount, setAmount] = useState<string>("")
+    const [convertedAmount, setConvertedAmount] = useState<string>("")
 
     async function convert() {
-        const data: ConvertResponse | ErrorMessage = await ExchangeratesAPI.convertEndpoint(fromConvertType, toConvertType, amount)
+        if (amount === "") {
+            alert("Amount is required")
+            return
+        }
+        const amountNumber = parseFloat(amount.replace(",", "."))
+        if (isNaN(amountNumber)) {
+            alert("Invalid amount")
+            return
+        }
+        const data: ConvertResponse | ErrorMessage = await ExchangeratesAPI.convertEndpoint(fromConvertType, toConvertType, amountNumber)
         if ("error" in data) {
             alert(data.error)
             return
         }
-        setConvertedAmount(data.conversion_result)
+        setConvertedAmount(data.conversion_result.toString())
     }
 
     function invertTypes() {
@@ -35,17 +48,21 @@ function Home() {
         loadCodes(setCodes)
     }, [])
 
+    function teste() { console.log(theme) }
+
     return (
         <>
             <nav className={css.nav} />
-            <main className={css.main}>
+            <main className={theme === "light" ? css.main + " " + css.mainLight : css.main + " " + css.mainDark}>
+                <button onClick={toggleTheme} className={css.toggleTheme} />
                 <div className={css.label}>
                     <label>From</label>
                     <div className={css.input}>
                         <input
-                            type="number"
+                            type="text"
                             value={amount}
-                            onChange={e => setAmount(Number(e.target.value))}
+                            onChange={e => setAmount(numberInputMask(e))}
+                            placeholder="Amount"
                         />
                         <select
                             onChange={e => setFromConvertType(e.target.value)}
@@ -64,10 +81,11 @@ function Home() {
                     <label>To</label>
                     <div className={css.input}>
                         <input
-                            type="number"
+                            type="text"
                             value={convertedAmount}
                             readOnly
                             className={css.readonly}
+                            placeholder="Converted amount"
                         />
                         <select
                             onChange={e => setToConvertType(e.target.value)}
@@ -79,7 +97,7 @@ function Home() {
                     </div>
                 </div>
             </main>
-            <footer className={css.footer}>
+            <footer className={theme === "light" ? css.footer + " " + css.footerLight : css.footer + " " + css.footerDark}>
                 <p>Developed by <a href="https://github.com/felipe-sant">@felipe-sant</a></p>
             </footer>
         </>

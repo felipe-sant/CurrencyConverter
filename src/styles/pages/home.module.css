@@ -1,3 +1,22 @@
+.toggleTheme {
+    background-image: url("../../assets/dark.svg");
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border-radius: 100%;
+    width: 32px;
+    height: 32px;
+    position: fixed;
+    top: 20px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.mainDark .toggleTheme {
+    background-image: url("../../assets/light.svg");
+}
+
 .nav {
     height: 5px;
     background-color: #007bff;
@@ -5,14 +24,17 @@
 
 .main {
     min-height: calc(100dvh - 35px);
-    max-width: 800px;
-    min-width: none;
     margin: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 20px;
+}
+
+.mainDark {
+    background-color: #202020;
+    color: white;
 }
 
 .label {
@@ -24,6 +46,12 @@
     border: 1px solid #ccc;
     padding: 20px;
     border-radius: 10px;
+}
+
+.mainDark .label {
+    background-color: #333;
+    color: white;
+    border: 1px solid #333;
 }
 
 .input {
@@ -38,9 +66,20 @@
     border-radius: 5px;
 }
 
+.mainDark .input input {
+    background-color: #202020;
+    color: white;
+    border: 1px solid #333;
+}
+
 .input .readonly {
-    background-color: #ebebeb;
+    background-color: #e1e1e1;
     cursor: not-allowed;
+}
+
+.mainDark .input .readonly {
+    background-color: #1a1a1a;
+    color: #999999;
 }
 
 .select {
@@ -92,6 +131,10 @@
     cursor: pointer;
 }
 
+.mainDark .invert {
+    background-image: url("../../assets/swap-dark.svg");
+}
+
 .footer {
     display: flex;
     flex-direction: row;
@@ -100,6 +143,11 @@
     color: #007bff;
     height: 30px;
     font-weight: 400;
+}
+
+.footerDark {
+    background-color: #202020;
+    color: white;
 }
 
 .footer p a {
