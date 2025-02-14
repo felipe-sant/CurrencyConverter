@@ -1,3 +1,108 @@
+.nav {
+    height: 5px;
+    background-color: #007bff;
+}
+
 .main {
-    height: 100dvh;
+    min-height: calc(100dvh - 35px);
+    width: 800px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.label {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    width: 300px;
+    gap: 10px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.input .readonly {
+    background-color: #ebebeb;
+    cursor: not-allowed;
+}
+
+.select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.select:focus {
+    outline: none;
+}
+
+.select option {
+    padding: 10px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.invert {
+    background-image: url("../../assets/swap.svg");
+    background-size: 28px;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: #007bff;
+    height: 30px;
+    font-weight: 400;
+}
+
+.footer p a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
 }
