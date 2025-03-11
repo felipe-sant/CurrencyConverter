@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import css from "../styles/pages/home.module.css"
 import loadCodes from "../functions/loadCodes"
-import ExchangeratesAPI from "../api/ExchangeratesAPI"
+import ExchangeratesAPI from "../services/ExchangeratesAPI"
 import ConvertResponse from "../types/ConvertResponse"
 import ErrorMessage from "../types/ErrorMessage"
 import ThemeContext from "../context/Theme.context"

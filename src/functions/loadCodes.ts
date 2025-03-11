@@ -1,4 +1,4 @@
-import ExchangeratesAPI from "../api/ExchangeratesAPI"
+import ExchangeratesAPI from "../services/ExchangeratesAPI"
 import CodesResponse from "../types/CodesResponse"
 import ErrorMessage from "../types/ErrorMessage"
 
