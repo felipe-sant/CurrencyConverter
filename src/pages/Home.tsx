@@ -1,60 +1,27 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import css from "../styles/pages/home.module.css"
-import loadCodes from "../functions/loadCodes"
-import ExchangeratesAPI from "../services/ExchangeratesAPI"
-import ConvertResponse from "../types/ConvertResponse"
-import ErrorMessage from "../types/ErrorMessage"
 import ThemeContext from "../context/Theme.context"
-import numberInputMask from "../functions/inputMask/numberInputMask"
 import SearchableSelect from "../components/SearchableSelect"
-import OptionType from "../types/interfaces/Option.interface"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "../redux/store"
+import { getSupportedCodes } from "../services/asyncThunk/getSuportedCodes"
+import { setAmount, setFromConvertType, setToConvertType } from "../redux/slices/converterSlice"
+import { convertCodes } from "../services/asyncThunk/convertCodes"
 
 function Home() {
     const { theme, toggleTheme } = useContext(ThemeContext)
-
-    const [option, setOption] = useState<{value: string, label: string}[]>([])
-    const [fromConvertType, setFromConvertType] = useState<OptionType>()
-    const [toConvertType, setToConvertType] = useState<OptionType>()
-    const [amount, setAmount] = useState<string>("")
-    const [convertedAmount, setConvertedAmount] = useState<string>("")
-
-    async function convert() {
-        if (amount === "") {
-            alert("Amount is required")
-            return
-        }
-        const amountNumber = parseFloat(amount.replace(",", "."))
-        if (isNaN(amountNumber)) {
-            alert("Invalid amount")
-            return
-        }
-
-        if (!fromConvertType || !toConvertType) {
-            alert("Both currencies are required")
-            return
-        }
-
-        const data: ConvertResponse | ErrorMessage = await ExchangeratesAPI.convertEndpoint(fromConvertType.value, toConvertType.value, amountNumber)
-        if ("error" in data) {
-            alert(data.error)
-            return
-        }
-        setConvertedAmount(data.conversion_result.toString())
-    }
-
-    function invertTypes() {
-        const type = fromConvertType
-        setFromConvertType(toConvertType)
-        setToConvertType(type)
-
-        const value = amount
-        setAmount(convertedAmount)
-        setConvertedAmount(value)
-    }
+    const dispatch = useDispatch<AppDispatch>()
+    const {
+        amount,
+        convertedAmount,
+        toConvertType,
+        fromConvertType,
+        option
+    } = useSelector((state: RootState) => state.converter)
 
     useEffect(() => {
-        loadCodes(setOption)
-    }, [])
+        dispatch(getSupportedCodes())
+    }, [dispatch])
 
     return (
         <>
@@ -67,20 +34,19 @@ function Home() {
                         <input
                             type="text"
                             value={amount}
-                            onChange={e => setAmount(numberInputMask(e))}
+                            onChange={e => dispatch(setAmount(e.target.value))}
                             placeholder="Amount"
                         />
                         <SearchableSelect 
                             options={option}
-                            onChange={(value: any) => setFromConvertType(value)}
+                            onChange={(value: any) => dispatch(setFromConvertType(value))}
                             placeholder={"Select currency"}
                             className={css.select}
                         />
                     </div>
                 </div>
                 <div className={css.buttons}>
-                    <button onClick={convert} className={css.button}>Convert</button>
-                    <button onClick={invertTypes} className={css.invert} />
+                    <button onClick={() => dispatch(convertCodes({ from: fromConvertType, to: toConvertType, amount: amount }))} className={css.button}>Convert</button>
                 </div>
                 <div className={css.label}>
                     <label>To</label>
@@ -94,7 +60,7 @@ function Home() {
                         />
                         <SearchableSelect 
                             options={option}
-                            onChange={(value: any) => setToConvertType(value)}
+                            onChange={(value: any) => dispatch(setToConvertType(value))}
                             placeholder={"Select currency"}
                             className={css.select}
                         />
